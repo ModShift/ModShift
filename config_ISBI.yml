@@ -1,0 +1,4 @@
+root_path: ./data/
+dataset: ISBI # possible values CREMI, ISBI
+downsample_factor: 1  # factor by which data will be downsampled in each spatial dimension
+slices: all # slices to be loaded, only needed for CREMI/ISBI, values: all, integer below 16 for CREMI, below 5 for ISBI
