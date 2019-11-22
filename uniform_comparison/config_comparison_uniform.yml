@@ -1,0 +1,40 @@
+threshold: 0.05
+num_runs: 5000
+
+mod_shift:
+  keops: True
+  save_all: False
+  rho:
+    type: clipped_linear
+
+  weight_func:
+    beta: 0.2
+    type: clipped_linear # clipped_linear, clipped_cos
+
+  optimization:
+    compute_gradients: True # needed for end-to-end only
+    subsample_size: 300 # only relevant if method = subsample or exact, previously falsely called batch_size
+    blurring: False
+    num_epochs:  1000
+    batch_size: 16 # actual batch-size: i.e. over sets of datapoints that do not interact with each other
+    optimizer:
+      # type: SGD or Adam
+      type: Adam
+      momentum: 0.0
+      learning_rate: 0.005 # 0.0001 for downsample 2 with CREMI
+
+    scheduler:
+      # reduces the learning rate by gamma after ratio of the total epochs
+      gamma: 0.1
+      ratio:
+        - 0.85
+  torch:
+    device: cuda # cpu or cuda
+    dtype: torch.float # does not work yet, must not be interpreted as string
+
+mean_shift:
+  epochs: 1000
+  bandwidth: 0.2
+  kernel: flat
+  blurring: False
+  use_keops: True
