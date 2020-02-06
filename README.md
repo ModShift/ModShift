@@ -6,7 +6,7 @@
 2. Clone the repository `git clone https://github.com/ModShift/ModShift.git`
 3. Create and activate the environment
    ```
-   cd test_reprod
+   cd ModShift
    conda env create -f environment.yml
    conda activate ModShift
    ```
