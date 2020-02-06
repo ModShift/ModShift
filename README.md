@@ -14,12 +14,11 @@
    * For  CREMI  download  the  file  from [here](https://drive.google.com/file/d/1eOPfoKXmDPnxt_hibRjCMN4K8c4jhYWO/view) and place it in `ModShift/data/CREMI/data/CREMI.h5`.
    * For ISBI download the file from [here](https://drive.google.com/file/d/1E_OqBdOqEIfrK19H4gOxN2qkGYNbAknR/view) and place it in `ModShift/data/ISBI/data/ISBI.h5`.
    * For ISBI's PCA download the file from [here](https://drive.google.com/open?id=1r5n8ReXsJZXk0xrNsPJZ01SJUCzFRV9E) and place it in `ModShift/data/ISBI/data/ISBI_embeddings_PCA_8.npy`.
-5. Reproduce  the  pixel  embedding-based  clustering  re-
-sults by running
+5. Reproduce  the  pixel  embedding-based  clustering  results by running
    ```
    python main.py --data config_DATASET.yml --clustering config_CLUSTERING_METHOD.yml
    ```
-   For instance, to reproduce non-blurring Mod Shift’s results on the subvolume of CREMI A run
+   For instance, to reproduce fixed Mod Shift’s results on the subvolume of CREMI A run
    ```
    python main.py --data config_CREMI_A.yml --clustering config_mod_shift.yml
    ```
