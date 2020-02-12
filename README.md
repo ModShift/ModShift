@@ -23,7 +23,7 @@
    python main.py --data config_CREMI_A.yml --clustering config_mod_shift.yml
    ```
    Convergence points, labels and scores will be saved in `data/DATASET/`. The best parameters and scores will be printed.
-   In case of problems with PyKeOps, confer [here](https://www.kernel-operations.io/keops/python/installation.html). Note that the pure PyTorch implementation is very slow on these datasets, so that downsampling them in the `config_DATASET.yml` files is advisable if PyKeOps is not available.
+   In case of problems with PyKeOps, confer [here](https://www.kernel-operations.io/keops/python/installation.html). Note that the pure PyTorch implementation is very slow on these datasets, so that downsampling them in the `config_DATASET.yml` files is advisable if PyKeOps is not available. Note that the terms fixed / adaptive correspond to non-blurring / blurring in the configuration files.
 6. To reproduce the experiment of section D.3 do 
    ```
    cd uniform_comparison
