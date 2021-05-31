@@ -1,7 +1,6 @@
 import hdbscan
 import numpy as np
 from tqdm import tqdm
-import sys
 
 def obtain_hard_clusters(points, thresholds):
     # expects points as B * ? * E, thresholds as list
