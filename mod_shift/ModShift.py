@@ -14,12 +14,11 @@ sys.path.append("..")
 class ModShift(object):
     def __init__(self, data, config):
         # expects data in the form ? * channels
-        np.random.seed(42)
-
         self.device = torch.device(config["torch"]["device"])
         self.dtype = torch.float
         self.config = config
         self.blurring = self.config["optimization"]["blurring"]
+        self.grad_via_backprop = self.config["optimization"]["grad_via_backprop"]
 
         # reshape data from B(atch)* ? * E(mbd dim) to batch_size * channels (embd_dim) * ?
         data = np.moveaxis(data, -1, 1)
@@ -44,8 +43,10 @@ class ModShift(object):
         else: print("Please specify available optimiser.")
 
         # initialise dataset and dataloader
-        self.dataset = TensorDataset(self.mv_points, self.points0)
-        self.dataloader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle = True)
+        self.dataset = TensorDataset(self.mv_points,
+                                     self.points0,
+                                     torch.arange(start=0, end=self.mv_points.size(0)))
+        self.dataloader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True)
 
         if not config["keops"]:
             from .ModShiftModel import ModShiftModel
@@ -76,41 +77,100 @@ class ModShift(object):
         # do the mod shifting
         for epoch in tqdm(range(num_epochs), desc="Epochs", leave=False):
             loss_epoch = 0
-            for mv_points_batch, points0_batch in self.dataloader:
+            for mv_points_batch, points0_batch, ind_batch in self.dataloader:
+                if 0:
+                    # compute gradients without keops with tricks keeping the GPU-memory footprint manageable
+                    if self.config["keops"] == False:
+                        from .ModShiftModel import compute_model
+                        loss_batch = compute_model(mv_points_batch,
+                                                               points0_batch,
+                                                               self.model,
+                                                               self.config)
 
-                # compute gradients without keops with tricks keeping the GPU-memory footprint manageable
-                if self.config["keops"] == False:
-                    from .ModShiftModel import compute_model
-                    loss_batch = compute_model(mv_points_batch,
-                                                           points0_batch,
-                                                           self.model,
-                                                           self.config)
+
+                        if self.config["optimization"]["compute_gradients_early"] == False:
+                            loss_epoch += loss_batch.detach()
+                            loss_batch.backward()
+                        else:
+                            #gradients are already computed in compute_model
+                            loss_epoch += loss_batch
+
+                    # compute gradients using keops
+                    elif self.config["keops"] == True:
+                        if self.blurring:
+                            loss_batch = self.model(mv_points_batch)
+                        else:
+                            loss_batch = self.model(mv_points_batch, points0_batch)
+
+                        loss_epoch += loss_batch.detach()
+                        loss_batch.sum().backward()
+
+                    else: print("keops option can only be True or False")
+
+                    # perform a gradient update
+                    self.optimizer.step()
+                    self.optimizer.zero_grad()
 
 
-                    if self.config["optimization"]["compute_gradients_early"] == False:
+                    self.loss_list.append(loss_epoch.cpu().numpy())
+                if self.grad_via_backprop:  # todo: rewrite self.model such that the gradients are automatically computed and returned alongside the loss
+                    if self.config["keops"]:
+                        if self.blurring:
+                            loss_batch = self.model(mv_points_batch)
+                        else:
+                            loss_batch = self.model(mv_points_batch, points0_batch)
+
                         loss_epoch += loss_batch.detach()
                         loss_batch.backward()
+
+                    elif not self.config["keops"]:
+                        from .ModShiftModel import compute_model
+                        if self.blurring:
+                            loss_batch = compute_model(self.model,
+                                                       self.config,
+                                                       mv_points_batch
+                                                       )
+                        else:
+                            loss_batch = compute_model(self.model,
+                                                       self.config,
+                                                       mv_points_batch,
+                                                       points0_batch
+                                                       )
+
+                        if not self.config["optimization"]["compute_gradients"]:
+                            loss_epoch += loss_batch.detach()
+                            loss_batch.backward()
+                        else:
+                            # gradients are already computed in compute_model
+                            loss_epoch += loss_batch
+
                     else:
-                        #gradients are already computed in compute_model
-                        loss_epoch += loss_batch
+                        print("keops option can only be True or False")
 
-                # compute gradients using keops
-                elif self.config["keops"] == True:
-                    if self.blurring:
-                        loss_batch = self.model(mv_points_batch)
+                else:
+                    self.mv_points.grad = torch.zeros_like(self.mv_points)
+                    if self.config["keops"]:
+                        if self.blurring:
+                            self.mv_points.grad[ind_batch] = self.model(mv_points_batch)
+                        else:
+                            self.mv_points.grad[ind_batch] = self.model(mv_points_batch,
+                                                                        points0_batch)
                     else:
-                        loss_batch = self.model(mv_points_batch, points0_batch)
-
-                    loss_epoch += loss_batch.detach()
-                    loss_batch.sum().backward()
-
-                else: print("keops option can only be True or False")
-
-                # perform a gradient update
+                        from .ModShiftModel import compute_model
+                        if self.blurring:
+                            self.mv_points.grad[ind_batch] = compute_model(self.model,
+                                                                           self.config,
+                                                                           mv_points_batch
+                                                                           )
+                        else:
+                            self.mv_points.grad[ind_batch] = compute_model(self.model,
+                                                                           self.config,
+                                                                           mv_points_batch,
+                                                                           points0_batch
+                                                                           )
                 self.optimizer.step()
                 self.optimizer.zero_grad()
 
-            self.loss_list.append(loss_epoch.cpu().numpy())
 
             if self.config["save_all"]:
                 self.trajectories.append(np.copy(self.mv_points.cpu().data.numpy()))
