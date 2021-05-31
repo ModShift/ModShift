@@ -1,0 +1,53 @@
+ModShift:
+  keops: True # use keops or not. If false, make sure subsample_size and compute_gradients_early are properly set. Much slower without keops.
+  save_all: False # save the entire trajectory of each point or just inital and final position
+  rho:
+    type: clipped_linear # possbile types clipped_parabola, clipped_schoenberg, clipped_linear
+
+  weight_func:
+    type: clipped_linear # possible values clipped_linear, clipped_cos
+    beta: 0.1
+  optimization:
+    compute_gradients_early: True # set to true if the full computational graph does not fit on GPU, also set subsample_size
+    subsample_size: 1536  # unless keops, blocks of size subsample_size**2 are dealt subsequentially
+    blurring: False  # use blurring Mod Shift or not
+    iterations:  50  #number of iterations
+    batch_size: 16  # actual batch-size: i.e. over sets of datapoints that do not interact with each other
+    grad_via_backprop: False
+
+    optimizer:
+      type: Adam  #  SGD or Adam
+      learning_rate: 0.001
+      momentum: 0.0 # momentum for SGD
+
+    scheduler:
+      # devides the learning rate by gamma after ratio of the total epochs
+      gamma: 1.0
+      ratio:
+        - 0.85
+  torch:
+    device: cuda # cpu or cuda, keops is automatically on GPU
+
+CREMI_C_ModShift:
+  betas:
+    - 0.1
+  thresholds:
+    - 0.04
+
+#MeanShift parameters
+kernel: flat # flat or gaussian
+iterations: 50 # number of Mean Shift iterations
+keops: True  # use keops or not. Much slower without keops
+blurring: False # If using blurring or non-blurring Mean Shift
+
+CREMI_C_MeanShift:
+  bandwidths:
+    - 0.06
+  thresholds:
+    - 0.1
+
+CREMI_C_HDBSCAN:
+  min_samples:
+    - 20
+  min_cluster_sizes:
+    - 150
