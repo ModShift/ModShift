@@ -7,10 +7,7 @@ import numpy as np
 import os
 from utils.obtain_hard_clusters import obtain_hard_clusters
 from utils.metrics import compute_metrics
-<<<<<<< HEAD
 import time
-=======
->>>>>>> eaf686139555f1e8f4d31a410f97599b1930e414
 
 class MeanShiftWrapper(object):
     def __init__(self, config, dataset, target_dir):
