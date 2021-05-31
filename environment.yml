@@ -1,28 +1,32 @@
 name: ModShift
 channels:
   - pytorch
-  - conda-forge
   - anaconda
+  - abailoni
+  - conda-forge
   - defaults
 dependencies:
-  - cudatoolkit=10.0.130=0
-  - h5py=2.9.0=py37h7918eee_0
-  - hdbscan=0.8.23=py37hc1659b7_1
-  - hdf5=1.10.4=hb1b8bf9_0
-  - matplotlib=3.1.1=py37h5429711_0
-  - numpy=1.17.2=py37haad9e8e_0
-  - pip=19.2.3=py37_0
-  - python=3.7.4=h265db76_1
-  - pytorch=1.2.0=py3.7_cuda10.0.130_cudnn7.6.2_0
-  - pyyaml=5.1.2=py37h7b6447c_0
-  - requests=2.22.0=py37_0
-  - scikit-learn=0.21.3=py37hd81dba3_0
-  - scipy=1.1.0=py37h7c811a0_2
-  - tqdm=4.38.0=py_2
-  - yaml=0.1.7=h96e3832_1
+  - affogato=0.1.glia
+  - cudatoolkit=10.0.130
+  - h5py=2.9.0
+  - hdbscan=0.8.23
+  - hdf5=1.10.4
+  - joblib=0.17.0
+  - matplotlib=3.1.1
+  - nifty=1.0.7
+  - numpy=1.17.2
+  - pip=19.2.3
+  - python=3.7.4
+  - pytorch=1.2.0
+  - pyyaml=5.1.2
+  - requests=2.22.0
+  - scikit-image=0.16.2
+  - scikit-learn=0.21.3
+  - scipy=1.1.0
+  - tqdm=4.38.0
+  - yaml=0.1.7
   - pip:
     - fastcluster==1.1.25
-    - gputil==1.4.0
     - pykeops==1.2
-
+    - ray==1.0.1.post1
 
