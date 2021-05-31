@@ -26,7 +26,7 @@ Cardona A, Saalfeld S, Preibisch S, Schmid B, Cheng A, Pulokas J, Tomancak P, Ha
    ```
    python main.py --data config_DATASET.yml --clustering config_CLUSTERING_METHOD.yml
    ```
-   For instance, to reproduce non-blurring Mod Shift’s results on the subvolume of CREMI A run
+   For instance, to reproduce fixed Mod Shift’s results on the subvolume of CREMI A run
    ```
    python main.py --data config_CREMI_A.yml --clustering config_mod_shift.yml
    ```
@@ -57,3 +57,4 @@ Cardona A, Saalfeld S, Preibisch S, Schmid B, Cheng A, Pulokas J, Tomancak P, Ha
   
  ## License 
  This repository is licensed under the MIT License other than the directory cremi, which is strongly based on [this repository](https://github.com/cremi/cremi_python).
+

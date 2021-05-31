@@ -1,6 +1,5 @@
 import sys
 import time
-
 sys.path.append("..")
 from .ModShift import ModShift
 from tqdm import tqdm
@@ -83,6 +82,7 @@ class ModShiftWrapper(object):
                                  f"mod_shift_times_beta_{self.betas[0]}_threshold_{self.thresholds[0]}_"+
                                  f"downsample_{downsample}_repeats_{repeats}.npy"),
                     times)
+
         return sorted(results_list, key=lambda x: x["scores"]["CREMI_score"])[0]
 
 

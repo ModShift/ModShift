@@ -7,7 +7,10 @@ import numpy as np
 import os
 from utils.obtain_hard_clusters import obtain_hard_clusters
 from utils.metrics import compute_metrics
+<<<<<<< HEAD
 import time
+=======
+>>>>>>> eaf686139555f1e8f4d31a410f97599b1930e414
 
 class MeanShiftWrapper(object):
     def __init__(self, config, dataset, target_dir):
@@ -87,6 +90,7 @@ class MeanShiftWrapper(object):
                                  f"mean_shift_times_kernel_bandwidth_{self.bandwidths[0]}_"+
                                  f"threshold_{self.thresholds[0]}_repeats_{repeats}.npy"),
                     times)
+
         return sorted(results_list, key=lambda x: x["scores"]["CREMI_score"])[0]
 
 

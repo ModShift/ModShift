@@ -9,6 +9,7 @@ from tqdm import tqdm
 import time
 
 
+
 class HDBSCAN(object):
     def __init__(self, config, target_dir):
         self.min_samples_list = config["min_samples"]
@@ -72,6 +73,7 @@ class HDBSCAN(object):
                                  f"hdbscan_times_min_sample_{self.min_samples_list[0]}_"+
                                  f"min_cluster_{self.min_clusters_size_list[0]}_repeats_{repeats}.npy"),
                     times)
+
 
         return sorted(results_list, key=lambda x: x["scores"]["CREMI_score"])[0]
 

@@ -8,8 +8,13 @@ from utils.obtain_hard_clusters import obtain_hard_clusters
 
 
 class SingleLinkage(object):
-    def __init__(self, config, target_dir):
-        self.thresholds = config["thresholds"]
+    def __init__(self, config, dataset, target_dir):
+        if dataset == "CREMI":
+            self.thresholds = config["CREMI"]["thresholds"]
+        elif dataset == "ISBI":
+            self.thresholds = config["ISBI"]["thresholds"]
+        else:
+            print("Invalid dataset {} provided.".format(dataset))
         self.target_dir = target_dir
         if not os.path.exists(target_dir):
             try:
