@@ -1,0 +1,6 @@
+method: MWS
+graph_type: complete  # type of graph used: "complete" or "offset"
+pool_executor: thread  # parallelise over images using "thread", "process", "sequential"
+repeats: 5  # number of runs
+downsample_factor: 4  # downsample factor for the images
+timed: True  # should the runtimes be measured
