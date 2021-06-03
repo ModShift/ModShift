@@ -5,6 +5,7 @@ import yaml
 from utils.dataloader import load_data
 from utils.clusterers import get_clusterer
 import os
+import numpy as np
 
 datasets = ["CREMI_A", "CREMI_B", "CREMI_C", "ISBI"]
 
@@ -36,6 +37,7 @@ for dataset in datasets:
                               clustering_config,
                               target_dir=target_dir,
                               dataset= data_config["dataset"])
+
     # perform clustering
     best_results = mod_shifter.run(data, gt, repeats=5, timed=True)
 

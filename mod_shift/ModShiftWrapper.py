@@ -46,7 +46,8 @@ class ModShiftWrapper(object):
                 time_after_run = time.perf_counter()
                 trajectories = ModShifter.trajectories
 
-                np.save(os.path.join(self.target_dir, f"mod_shift_trajectories_beta_{beta}_run_{repeat}.npy"),
+                np.save(os.path.join(self.target_dir, f"mod_shift_trajectories_beta_{beta}_run_{repeat}_"+\
+                                                      f"downsample_{downsample}.npy"),
                         trajectories)
 
                 time_before_hard_cluster = time.perf_counter()
@@ -58,7 +59,8 @@ class ModShiftWrapper(object):
                 times.append(total_time)
                 # compute scores, save labels and scores for each threshold
                 for i, threshold in enumerate(self.thresholds):
-                    np.save(os.path.join(self.target_dir, f"mod_shit_labels_beta_{beta}_threshold_{threshold}_run_{repeat}.npy"),
+                    np.save(os.path.join(self.target_dir, f"mod_shift_labels_beta_{beta}_threshold_{threshold}_" + \
+                                                          f"run_{repeat}_downsample_{downsample}.npy"),
                             labels[:, i, ...])
 
                     # compute metrics
@@ -66,7 +68,8 @@ class ModShiftWrapper(object):
                                "scores": compute_metrics(labels[:, i, ...], gt.copy())}
                     # save results
                     np.save(os.path.join(self.target_dir,
-                                         f"mod_shift_scores_beta_{beta}_threshold_{threshold}_run_{repeat}.npy"),
+                                         f"mod_shift_scores_beta_{beta}_threshold_{threshold}_run_{repeat}_"+
+                                         f"downsample_{downsample}.npy"),
                             np.array([results["scores"]["CREMI_score"],
                                       results["scores"]["arand"],
                                       results["scores"]["voi"][0],
@@ -80,7 +83,7 @@ class ModShiftWrapper(object):
             print(f"Std dev time: {times.std(0)}")
             np.save(os.path.join(self.target_dir,
                                  f"mod_shift_times_beta_{self.betas[0]}_threshold_{self.thresholds[0]}_"+
-                                 f"downsample_{downsample}_repeats_{repeats}.npy"),
+                                 f"repeats_{repeats}_downsample_{downsample}.npy"),
                     times)
 
         return sorted(results_list, key=lambda x: x["scores"]["CREMI_score"])[0]

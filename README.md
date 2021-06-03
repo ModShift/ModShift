@@ -42,13 +42,19 @@ Cardona A, Saalfeld S, Preibisch S, Schmid B, Cheng A, Pulokas J, Tomancak P, Ha
    ```
    Replace `DATASET` as above and `GRAPHMETHOD` with either `kl` for Kernighan-Lin approximated Multicut or with `mws` 
    for the Mutex Watershed.
-8. To reproduce the experiment of section D.3 do 
+   
+8. After computing the run times and the graph baseline, run
+   ```
+   python MC_energies.py
+   ```
+   to compute various Multicut energies.
+9. To reproduce the experiment of section D.3 do 
    ```
    cd uniform_comparison
    python mean_mod_uniform.py
    ```
    The key statistics will be printed, the number of clusters for Mean Shift and Mod Shift saved and the histogram of these numbers of clusters plotted.
-9. To reproduces an experiment on the toy dataset, do
+10. To reproduces an experiment on the toy dataset, do
    ```
    cd 3clusters
    python trajectories_toy.py
